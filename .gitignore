@@ -12,3 +12,6 @@
 /ETradeApiV1.Sample/appsettings.json
 /ETradeApiV1.Console/bin/Debug
 /ETradeApiV1.Console/obj
+/ETradeApiV1/bin/Debug
+/ETradeApiV1/obj
+/packages
