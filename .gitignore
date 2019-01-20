@@ -3,3 +3,10 @@
 ################################################################################
 
 /.vs/ETradeApiV1/v15/Server/sqlite3
+/ETradeApiV1.Client/obj
+/ETradeApiV1.Sample/bin/Debug/netcoreapp2.2
+/ETradeApiV1.Sample/obj
+/.vs
+/ETradeApiV1.Client/bin/Debug/netstandard2.0
+/ETradeApiV1.Client/appsettings.json
+/ETradeApiV1.Sample/appsettings.json
