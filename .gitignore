@@ -10,3 +10,5 @@
 /ETradeApiV1.Client/bin/Debug/netstandard2.0
 /ETradeApiV1.Client/appsettings.json
 /ETradeApiV1.Sample/appsettings.json
+/ETradeApiV1.Console/bin/Debug
+/ETradeApiV1.Console/obj
