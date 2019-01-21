@@ -4,6 +4,7 @@ Rest client library for using the E*Trade V1 new API
 
 ## How do I use this library?
 
+```
 class Program
     {
         private static EtApiService _apiServices;
@@ -99,3 +100,4 @@ class Program
         }
 
     }
+```
