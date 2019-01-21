@@ -9,35 +9,42 @@ namespace ETradeApiV1.Client.Services
 {
     public class ApiService
     {
+        private EtOAuthConfig _config;
 
-        public ApiService()
+        public ApiService(EtOAuthConfig etOAuthConfig)
         {
-            GetOAuthFromSetting();
+            _config = etOAuthConfig;
         }
-        private OAuthConfig OAuthConfig { get; set; }
 
-        private void GetOAuthFromSetting()
+        public static EtOAuthConfig GetOAuthConfigFromSetting()
         {
             var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
+            var tokenUrl = ConfigurationManager.AppSettings["TokenUrl"];
             var authorizeUrl = ConfigurationManager.AppSettings["AuthorizeUrl"];
             var consumerKey = ConfigurationManager.AppSettings["ConsumerKey"];
             var consumerSecret = ConfigurationManager.AppSettings["ConsumerSecret"];
+            var accessSecret = ConfigurationManager.AppSettings["AccessSecret"];
+            var accessToken = ConfigurationManager.AppSettings["AccessToken"];
 
-            OAuthConfig = new OAuthConfig
+            return new EtOAuthConfig
             {
-                BaseUrl=baseUrl,
-                AuthorizeUrl=authorizeUrl,
-                ConsumerKey=consumerKey,
-                ConsumerSecret= consumerSecret
+                BaseUrl = baseUrl,
+                TokenUrl = tokenUrl,
+                AuthorizeUrl = authorizeUrl,
+                ConsumerKey = consumerKey,
+                ConsumerSecret = consumerSecret,
+                AccessSecret=accessSecret,
+                AccessToken=accessToken
+
             };
         }
 
         public string GetAuthorizeUrl()
         {
-            var baseUrl = new Uri(OAuthConfig.BaseUrl);
+            var baseUrl = new Uri(_config.TokenUrl);
             var client = new RestClient(baseUrl)
             {
-                Authenticator = OAuth1Authenticator.ForRequestToken(OAuthConfig.ConsumerKey, OAuthConfig.ConsumerSecret, "oob")
+                Authenticator = OAuth1Authenticator.ForRequestToken(_config.ConsumerKey, _config.ConsumerSecret, "oob")
             };
 
             var request = new RestRequest("/oauth/request_token");
@@ -47,16 +54,16 @@ namespace ETradeApiV1.Client.Services
             var oauthToken = qs["oauth_token"];
             var oauthTokenSecret = qs["oauth_token_secret"];
 
-            OAuthConfig.OauthToken = oauthToken;
-            OAuthConfig.OauthTokenSecret = oauthTokenSecret;
+            _config.OauthToken = oauthToken;
+            _config.OauthTokenSecret = oauthTokenSecret;
 
             var applicationName = qs["application_name"];
 
-            var baseSslUrl = new Uri(OAuthConfig.AuthorizeUrl);
+            var baseSslUrl = new Uri(_config.AuthorizeUrl);
             var sslClient = new RestClient(baseSslUrl);
 
             request = new RestRequest("authorize");
-            request.AddParameter("key", OAuthConfig.ConsumerKey);
+            request.AddParameter("key", _config.ConsumerKey);
             request.AddParameter("token", oauthToken);
 
 
@@ -67,12 +74,12 @@ namespace ETradeApiV1.Client.Services
 
         public void GetAccessToken(string verification)
         {
-            var baseUrl = new Uri("https://apisb.etrade.com");
+            var baseUrl = new Uri(_config.TokenUrl);
             var client = new RestClient(baseUrl)
             {
-                Authenticator = OAuth1Authenticator.ForAccessToken(OAuthConfig.ConsumerKey, OAuthConfig.ConsumerSecret,OAuthConfig.OauthToken, OAuthConfig.OauthTokenSecret, verification)
+                Authenticator = OAuth1Authenticator.ForAccessToken(_config.ConsumerKey, _config.ConsumerSecret, _config.OauthToken, _config.OauthTokenSecret, verification)
             };
-        
+
             var requestAccessTokenRequest = new RestRequest("/oauth/access_token");
             var requestActionTokenResponse = client.Execute(requestAccessTokenRequest);
 
@@ -80,13 +87,13 @@ namespace ETradeApiV1.Client.Services
             var accessToken = requestActionTokenResponseParameters["oauth_token"];
             var accessSecret = requestActionTokenResponseParameters["oauth_token_secret"];
 
-            OAuthConfig.AccessSecret=accessSecret;
-            OAuthConfig.AccessToken = accessToken;
+            _config.AccessSecret = accessSecret;
+            _config.AccessToken = accessToken;
         }
 
-        public OAuthConfig GetOAuthConfig()
+        public EtOAuthConfig GetOAuthConfig()
         {
-            return OAuthConfig;
+            return _config;
         }
     }
 }
