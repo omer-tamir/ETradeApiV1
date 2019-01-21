@@ -2,7 +2,7 @@
 
 Rest client library for using the E*Trade V1 new API
 
-How do I use this library?
+##How do I use this library?
 
 class Program
     {
