@@ -1,4 +1,4 @@
-﻿################################################################################
+################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
@@ -16,3 +16,5 @@
 /ETradeApiV1/bin/Debug
 /ETradeApiV1/obj
 /packages
+/README.zip
+ETradeApiV1.Console/App - Copy.config
