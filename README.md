@@ -4,6 +4,20 @@ Rest client library for using the E*Trade V1 new API
 
 ## How do I use this library?
 
+### App.Config
+```
+<appSettings>
+    <add key="BaseUrl" value="https://apisb.etrade.com/v1/" />
+    <add key="TokenUrl" value="https://api.etrade.com/" />
+    <add key="AuthorizeUrl" value="https://us.etrade.com/e/t/etws/" />
+    <add key="ConsumerKey" value="Your_ConsumerKey" />
+    <add key="ConsumerSecret" value="Your_ConsumerSecret" />
+    <add key="AccessSecret" value="" />
+    <add key="AccessToken" value="" />
+  </appSettings>
+```
+  
+### Console Application Example
 ```
 class Program
     {
