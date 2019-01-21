@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using ETradeApiV1.Client.Dtos;
+using ETradeApiV1.Client.Models;
 using ETradeApiV1.Client.Services;
 using RestSharp;
 using RestSharp.Authenticators;
@@ -9,7 +10,7 @@ namespace ETradeApiV1.Console
 {
     class Program
     {
-        private static ApiService _apiServices;
+        private static EtApiService _apiServices;
         static void Main(string[] args)
         {
             string key;
@@ -41,33 +42,11 @@ namespace ETradeApiV1.Console
 
         }
 
-        private static void GetQuote()
-        {
-            var config = ApiService.GetOAuthConfigFromSetting();
-            var qClient = new RestClient
-            {
-                BaseUrl = new Uri(config.BaseUrl),
-                Authenticator = OAuth1Authenticator.ForProtectedResource(config.ConsumerKey, config.ConsumerSecret, config.AccessToken, config.AccessSecret)
-
-            };
-
-            var request = new RestRequest("market/quote/CVS");
-            request.AddQueryParameter("detailFlag", "ALL");
-            var response = qClient.Execute<QuoteDto>(request);
-
-            foreach (var item in response.Data.QuoteResponse.QuoteData)
-            {
-                System.Console.WriteLine($"{item.Product.symbol} {item.Product.securityType}");
-            }
-
-            System.Console.ReadLine();
-        }
-
         private static void Authenticate_Etrade_With_Client()
         {
 
-            var config = ApiService.GetOAuthConfigFromSetting();
-            _apiServices = new ApiService(config);
+            var config = EtConfigurationService.GetOAuthConfigFromSetting();
+            _apiServices = new EtApiService(config);
 
             var authorizeUrl = _apiServices.GetAuthorizeUrl();
             Process.Start(authorizeUrl);
@@ -82,14 +61,29 @@ namespace ETradeApiV1.Console
             }
             while (verificationKey == null);
 
-            _apiServices.GetAccessToken(verificationKey);
+            var isSet = _apiServices.SetAccessToken(verificationKey);
+            if (isSet) EtConfigurationService.SaveTokenTpConfig(config);
 
 
         }
 
+        private static void GetQuote()
+        {
+            var config = EtConfigurationService.GetOAuthConfigFromSetting();
+            var response = EtApiService.GetQuote(config,"CVS,T");
+
+            foreach (var item in response.Data.QuoteResponse.QuoteData)
+            {
+                System.Console.WriteLine($"{item.Product.symbol} {item.Product.securityType}");
+            }
+
+            System.Console.ReadLine();
+        }
+
+
         private static void GetAccountsList()
         {
-            var config = ApiService.GetOAuthConfigFromSetting();
+            var config = EtConfigurationService.GetOAuthConfigFromSetting();
             var qClient = new RestClient
             {
                 BaseUrl = new Uri(config.BaseUrl),

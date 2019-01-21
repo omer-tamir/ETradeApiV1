@@ -1,42 +1,20 @@
 ﻿using System;
 using System.Configuration;
 using System.Web;
+using ETradeApiV1.Client.Dtos;
 using ETradeApiV1.Client.Models;
 using RestSharp;
 using RestSharp.Authenticators;
 
 namespace ETradeApiV1.Client.Services
 {
-    public class ApiService
+    public class EtApiService
     {
-        private EtOAuthConfig _config;
+        private readonly EtOAuthConfig _config;
 
-        public ApiService(EtOAuthConfig etOAuthConfig)
+        public EtApiService(EtOAuthConfig etOAuthConfig)
         {
             _config = etOAuthConfig;
-        }
-
-        public static EtOAuthConfig GetOAuthConfigFromSetting()
-        {
-            var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
-            var tokenUrl = ConfigurationManager.AppSettings["TokenUrl"];
-            var authorizeUrl = ConfigurationManager.AppSettings["AuthorizeUrl"];
-            var consumerKey = ConfigurationManager.AppSettings["ConsumerKey"];
-            var consumerSecret = ConfigurationManager.AppSettings["ConsumerSecret"];
-            var accessSecret = ConfigurationManager.AppSettings["AccessSecret"];
-            var accessToken = ConfigurationManager.AppSettings["AccessToken"];
-
-            return new EtOAuthConfig
-            {
-                BaseUrl = baseUrl,
-                TokenUrl = tokenUrl,
-                AuthorizeUrl = authorizeUrl,
-                ConsumerKey = consumerKey,
-                ConsumerSecret = consumerSecret,
-                AccessSecret=accessSecret,
-                AccessToken=accessToken
-
-            };
         }
 
         public string GetAuthorizeUrl()
@@ -72,7 +50,7 @@ namespace ETradeApiV1.Client.Services
             return url;
         }
 
-        public void GetAccessToken(string verification)
+        public bool SetAccessToken(string verification)
         {
             var baseUrl = new Uri(_config.TokenUrl);
             var client = new RestClient(baseUrl)
@@ -89,11 +67,28 @@ namespace ETradeApiV1.Client.Services
 
             _config.AccessSecret = accessSecret;
             _config.AccessToken = accessToken;
+
+            return accessToken != String.Empty;
         }
 
         public EtOAuthConfig GetOAuthConfig()
         {
             return _config;
+        }
+
+        public static IRestResponse<QuoteDto> GetQuote(EtOAuthConfig config,string symbols)
+        {
+            var qClient = new RestClient
+            {
+                BaseUrl = new Uri(config.BaseUrl),
+                Authenticator = OAuth1Authenticator.ForProtectedResource(config.ConsumerKey, config.ConsumerSecret,
+                    config.AccessToken, config.AccessSecret)
+            };
+
+            var request = new RestRequest($"market/quote/{symbols}");
+            request.AddQueryParameter("detailFlag", "ALL");
+            var response = qClient.Execute<QuoteDto>(request);
+            return response;
         }
     }
 }
