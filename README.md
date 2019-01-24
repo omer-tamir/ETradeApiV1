@@ -1,6 +1,6 @@
 # ETradeApiV1
 
-Rest client library for using the E*Trade V1 new API Supports both **.NET Framework** and **.NET Core** (by using .NET Standard)!
+Rest client library for using the E*Trade V1 new API Supports both **.NET Framework** and **.NET Core** (by using .NET Standard)
 
 ## Install
 Install package from [NuGet](https://www.nuget.org/packages/ETradeApi/) or Package Manager Console:
