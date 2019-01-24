@@ -35,6 +35,7 @@ class Program
                 System.Console.WriteLine("1. Authenticate  ");
                 System.Console.WriteLine("2. Get Quote");
                 System.Console.WriteLine("3. Get Accounts List ");
+                System.Console.WriteLine("4. Renew access token ");
                 System.Console.WriteLine("Enter key: ");
 
                 key = System.Console.ReadLine();
@@ -52,10 +53,25 @@ class Program
                 case "3":
                     GetAccountsList();
                     break;
+                case "4":
+                    RenewAccessToken();
+                    break;
+
 
             }
 
 
+        }
+
+        private static void RenewAccessToken()
+        {
+            var config = EtConfigurationService.GetOAuthConfigFromSetting();
+            _apiServices = new EtApiService(config);
+            var hasTokenRenewed = _apiServices.RenewAccessToken(config);
+            
+            System.Console.Write($"{hasTokenRenewed}");
+
+            System.Console.ReadLine();
         }
 
         private static void Authenticate_Etrade_With_Client()
@@ -86,7 +102,7 @@ class Program
         private static void GetQuote()
         {
             var config = EtConfigurationService.GetOAuthConfigFromSetting();
-            var response = EtApiService.GetQuote(config,"CVS,T");
+            var response = EtApiService.GetQuote(config, "CVS,T");
 
             foreach (var item in response.Data.QuoteResponse.QuoteData)
             {
