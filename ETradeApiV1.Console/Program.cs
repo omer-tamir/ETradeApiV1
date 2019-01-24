@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using ETradeApiV1.Client.Dtos;
-using ETradeApiV1.Client.Models;
 using ETradeApiV1.Client.Services;
 using RestSharp;
 using RestSharp.Authenticators;
@@ -19,6 +18,7 @@ namespace ETradeApiV1.Console
                 System.Console.WriteLine("1. Authenticate  ");
                 System.Console.WriteLine("2. Get Quote");
                 System.Console.WriteLine("3. Get Accounts List ");
+                System.Console.WriteLine("4. Renew access token ");
                 System.Console.WriteLine("Enter key: ");
 
                 key = System.Console.ReadLine();
@@ -36,10 +36,25 @@ namespace ETradeApiV1.Console
                 case "3":
                     GetAccountsList();
                     break;
+                case "4":
+                    RenewAccessToken();
+                    break;
+
 
             }
 
 
+        }
+
+        private static void RenewAccessToken()
+        {
+            var config = EtConfigurationService.GetOAuthConfigFromSetting();
+            _apiServices = new EtApiService(config);
+            var hasTokenRenewed = _apiServices.RenewAccessToken(config);
+            
+            System.Console.Write($"{hasTokenRenewed}");
+
+            System.Console.ReadLine();
         }
 
         private static void Authenticate_Etrade_With_Client()
@@ -70,7 +85,7 @@ namespace ETradeApiV1.Console
         private static void GetQuote()
         {
             var config = EtConfigurationService.GetOAuthConfigFromSetting();
-            var response = EtApiService.GetQuote(config,"CVS,T");
+            var response = EtApiService.GetQuote(config, "CVS,T");
 
             foreach (var item in response.Data.QuoteResponse.QuoteData)
             {

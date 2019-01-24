@@ -18,3 +18,6 @@
 /packages
 /README.zip
 ETradeApiV1.Console/App - Copy.config
+/ConsoleApp1/obj
+/ETradeApiV1.Client/bin/Release
+/ETradeApiV1.Client/bin/Debug

@@ -76,7 +76,7 @@ namespace ETradeApiV1.Client.Services
             return _config;
         }
 
-        public static IRestResponse<QuoteDto> GetQuote(EtOAuthConfig config,string symbols)
+        public static IRestResponse<QuoteDto> GetQuote(EtOAuthConfig config, string symbols)
         {
             var qClient = new RestClient
             {
@@ -89,6 +89,20 @@ namespace ETradeApiV1.Client.Services
             request.AddQueryParameter("detailFlag", "ALL");
             var response = qClient.Execute<QuoteDto>(request);
             return response;
+        }
+
+        public bool RenewAccessToken(EtOAuthConfig config)
+        {
+            var client = new RestClient
+            {
+                BaseUrl = new Uri(config.TokenUrl),
+                Authenticator = OAuth1Authenticator.ForProtectedResource(config.ConsumerKey, config.ConsumerSecret, config.AccessToken, config.AccessSecret)
+            };
+
+            var request = new RestRequest($"/oauth/renew_access_token");
+            var response = client.Execute(request);
+
+            return response.Content == "Access Token has been renewed";
         }
     }
 }

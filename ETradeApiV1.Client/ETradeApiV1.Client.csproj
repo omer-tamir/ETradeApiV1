@@ -2,6 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Omer Tamir</Authors>
+    <Company></Company>
+    <PackageProjectUrl>https://github.com/omermina/ETradeApiV1</PackageProjectUrl>
+    <PackageTags>E*Trade  V1 API</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/omermina/ETradeApiV1</RepositoryUrl>
+    <PackageId>ETradeApi</PackageId>
+    <Version>1.0.2</Version>
+    <AssemblyVersion>1.0.1.2</AssemblyVersion>
+    <FileVersion>1.0.1.2</FileVersion>
+    <Description>Simple REST client to connect to E*Treade V1 new API</Description>
   </PropertyGroup>
 
   <ItemGroup>
