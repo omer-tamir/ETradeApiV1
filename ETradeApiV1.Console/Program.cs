@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using ETradeApiV1.Client.Dtos;
+using ETradeApiV1.Client.Models;
 using ETradeApiV1.Client.Services;
 using RestSharp;
 using RestSharp.Authenticators;
+using System.Linq;
 
 namespace ETradeApiV1.Console
 {
@@ -15,34 +17,33 @@ namespace ETradeApiV1.Console
             string key;
             do
             {
-                System.Console.WriteLine("1. Authenticate  ");
-                System.Console.WriteLine("2. Get Quote");
-                System.Console.WriteLine("3. Get Accounts List ");
-                System.Console.WriteLine("4. Renew access token ");
-                System.Console.WriteLine("Enter key: ");
+                do
+                {
+                    System.Console.WriteLine("1. Authenticate  ");
+                    System.Console.WriteLine("2. Get Quote");
+                    System.Console.WriteLine("3. Get Accounts List ");
+                    System.Console.WriteLine("4. Renew access token ");
+                    System.Console.WriteLine("Enter key: ");
 
-                key = System.Console.ReadLine();
-            }
-            while (key == null);
+                    key = System.Console.ReadLine();
+                } while (key == null);
 
-            switch (key)
-            {
-                case "1":
-                    Authenticate_Etrade_With_Client();
-                    break;
-                case "2":
-                    GetQuote();
-                    break;
-                case "3":
-                    GetAccountsList();
-                    break;
-                case "4":
-                    RenewAccessToken();
-                    break;
-
-
-            }
-
+                switch (key)
+                {
+                    case "1":
+                        Authenticate_Etrade_With_Client();
+                        break;
+                    case "2":
+                        GetQuote();
+                        break;
+                    case "3":
+                        GetAccountsList();
+                        break;
+                    case "4":
+                        RenewAccessToken();
+                        break;
+                }
+            } while (key != "0");
 
         }
 
@@ -51,10 +52,8 @@ namespace ETradeApiV1.Console
             var config = EtConfigurationService.GetOAuthConfigFromSetting();
             _apiServices = new EtApiService(config);
             var hasTokenRenewed = _apiServices.RenewAccessToken(config);
-            
-            System.Console.Write($"{hasTokenRenewed}");
 
-            System.Console.ReadLine();
+            System.Console.Write($"{hasTokenRenewed}");
         }
 
         private static void Authenticate_Etrade_With_Client()
@@ -85,14 +84,30 @@ namespace ETradeApiV1.Console
         private static void GetQuote()
         {
             var config = EtConfigurationService.GetOAuthConfigFromSetting();
-            var response = EtApiService.GetQuote(config, "CVS,T");
 
-            foreach (var item in response.Data.QuoteResponse.QuoteData)
+            System.Console.Write("Ticker:  ");
+            var ticker = System.Console.ReadLine();
+            if (ticker == "O") ticker = "TSLA:2019:02:15:PUT:220";
+
+            var response = EtApiService.GetQuote(config, ticker, ticker == "O" ? DetailFlag.OPTIONS : DetailFlag.ALL);
+
+            if (response.Data.QuoteResponse.Messages != null)
             {
-                System.Console.WriteLine($"{item.Product.symbol} {item.Product.securityType}");
+                foreach (var message in response.Data.QuoteResponse.Messages.Message)
+                {
+                    System.Console.WriteLine($"{message.code} {message.description}");
+                }
+            }
+            else
+            {
+                foreach (var item in response.Data.QuoteResponse.QuoteData)
+                {
+                    System.Console.WriteLine(
+                        $"{item.Product.symbol} {item.All.companyName} {item.All.lastTrade} {item.All.nextEarningDate}");
+                }
             }
 
-            System.Console.ReadLine();
+            System.Console.WriteLine();
         }
 
 

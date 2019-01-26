@@ -76,7 +76,7 @@ namespace ETradeApiV1.Client.Services
             return _config;
         }
 
-        public static IRestResponse<QuoteDto> GetQuote(EtOAuthConfig config, string symbols)
+        public static IRestResponse<QuoteDto> GetQuote(EtOAuthConfig config, string symbols, DetailFlag detailFlag = DetailFlag.ALL)
         {
             var qClient = new RestClient
             {
@@ -86,7 +86,9 @@ namespace ETradeApiV1.Client.Services
             };
 
             var request = new RestRequest($"market/quote/{symbols}");
-            request.AddQueryParameter("detailFlag", "ALL");
+            request.AddQueryParameter("detailFlag", detailFlag.ToString());
+            request.AddQueryParameter("requireEarningsDate", "true");
+            request.AddQueryParameter("skipMiniOptionsCheck", "true");
             var response = qClient.Execute<QuoteDto>(request);
             return response;
         }
