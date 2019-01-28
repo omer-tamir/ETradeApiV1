@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Threading.Tasks;
 using System.Web;
 using ETradeApiV1.Client.Dtos;
 using ETradeApiV1.Client.Models;
@@ -68,12 +69,22 @@ namespace ETradeApiV1.Client.Services
             _config.AccessSecret = accessSecret;
             _config.AccessToken = accessToken;
 
-            return accessToken != String.Empty;
+            return accessToken != string.Empty;
         }
 
         public EtOAuthConfig GetOAuthConfig()
         {
             return _config;
+        }
+
+        public IRestResponse<QuoteDto> GetQuote(string symbols, DetailFlag detailFlag = DetailFlag.ALL)
+        {
+            var response = GetQuote(_config, symbols, detailFlag);
+            if (!response.IsSuccessful)
+            {
+                RenewAccessToken();
+            }
+            return GetQuote(_config, symbols, detailFlag);
         }
 
         public static IRestResponse<QuoteDto> GetQuote(EtOAuthConfig config, string symbols, DetailFlag detailFlag = DetailFlag.ALL)
@@ -93,7 +104,12 @@ namespace ETradeApiV1.Client.Services
             return response;
         }
 
-        public bool RenewAccessToken(EtOAuthConfig config)
+        public bool RenewAccessToken()
+        {
+            return RenewAccessToken(_config);
+        }
+
+        public static bool RenewAccessToken(EtOAuthConfig config)
         {
             var client = new RestClient
             {
