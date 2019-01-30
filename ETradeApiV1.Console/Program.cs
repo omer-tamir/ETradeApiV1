@@ -126,8 +126,9 @@ namespace ETradeApiV1.Console
                 {
                     foreach (var item in response.Data.QuoteResponse.QuoteData)
                     {
-                        System.Console.WriteLine(
-                            $"{item.Product.symbol} {item.All.companyName} {item.All.lastTrade} {item.All.nextEarningDate}");
+                        System.Console.WriteLine($"{item.Product.symbol} {item.All.companyName} {item.All.lastTrade} {item.All.nextEarningDate}");
+                        if(item.All.ExtendedHourQuoteDetail!=null)
+                        System.Console.WriteLine($"{item.Product.symbol} {item.All.companyName} {item.All.ExtendedHourQuoteDetail.lastPrice} {item.All.nextEarningDate}");
                     }
                 }
             }

@@ -67,5 +67,6 @@ namespace ETradeApiV1.Client.Dtos
         public long expirationDate { get; set; }
         public long timeOfLastTrade { get; set; }
         public long averageVolume { get; set; }
+        public ExtendedHourQuoteDetail ExtendedHourQuoteDetail { get; set; }
     }
 }
