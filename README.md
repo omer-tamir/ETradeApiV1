@@ -107,6 +107,8 @@ class Program
             foreach (var item in response.Data.QuoteResponse.QuoteData)
             {
                 System.Console.WriteLine($"{item.Product.symbol} {item.Product.securityType}");
+                if(item.All.ExtendedHourQuoteDetail!=null)
+                        System.Console.WriteLine($"{item.Product.symbol} {item.All.companyName} {item.All.ExtendedHourQuoteDetail.lastPrice} {item.All.nextEarningDate}");
             }
 
             System.Console.ReadLine();
