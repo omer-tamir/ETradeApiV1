@@ -11,7 +11,7 @@ namespace ETradeApiV1.Client.Services
 {
     public class EtApiService
     {
-        private readonly EtOAuthConfig _config;
+        private EtOAuthConfig _config;
 
         public EtApiService(EtOAuthConfig etOAuthConfig)
         {
