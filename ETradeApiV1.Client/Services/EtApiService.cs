@@ -72,6 +72,29 @@ namespace ETradeApiV1.Client.Services
             return accessToken != string.Empty;
         }
 
+        public EtOAuthConfig SetAccessToken(EtOAuthConfig config, string verification)
+        {
+            var baseUrl = new Uri(config.TokenUrl);
+            var client = new RestClient(baseUrl)
+            {
+                Authenticator = OAuth1Authenticator.ForAccessToken(config.ConsumerKey, config.ConsumerSecret, config.OauthToken,
+                    config.OauthTokenSecret, verification)
+            };
+
+            var requestAccessTokenRequest = new RestRequest("/oauth/access_token");
+            var requestActionTokenResponse = client.Execute(requestAccessTokenRequest);
+
+            var requestActionTokenResponseParameters = HttpUtility.ParseQueryString(requestActionTokenResponse.Content);
+
+            var accessToken = requestActionTokenResponseParameters["oauth_token"];
+            var accessSecret = requestActionTokenResponseParameters["oauth_token_secret"];
+
+            config.AccessSecret = accessSecret;
+            config.AccessToken = accessToken;
+
+            return config;
+        }
+
         public EtOAuthConfig GetOAuthConfig()
         {
             return _config;
