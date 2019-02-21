@@ -72,7 +72,7 @@ namespace ETradeApiV1.Client.Services
             return accessToken != string.Empty;
         }
 
-        public EtOAuthConfig SetAccessToken(EtOAuthConfig config, string verification)
+        public bool SetAccessToken(EtOAuthConfig config, string verification)
         {
             var baseUrl = new Uri(config.TokenUrl);
             var client = new RestClient(baseUrl)
@@ -92,7 +92,7 @@ namespace ETradeApiV1.Client.Services
             config.AccessSecret = accessSecret;
             config.AccessToken = accessToken;
 
-            return config;
+            return accessToken != string.Empty;
         }
 
         public EtOAuthConfig GetOAuthConfig()
