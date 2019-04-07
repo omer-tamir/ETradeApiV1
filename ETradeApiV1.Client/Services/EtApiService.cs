@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Configuration;
-using System.Threading.Tasks;
 using System.Web;
 using ETradeApiV1.Client.Dtos;
 using ETradeApiV1.Client.Models;
+using Microsoft.Extensions.Options;
 using RestSharp;
 using RestSharp.Authenticators;
 
@@ -11,11 +10,27 @@ namespace ETradeApiV1.Client.Services
 {
     public class EtApiService
     {
-        private EtOAuthConfig _config;
-
+        private readonly EtOAuthConfig _config;
         public EtApiService(EtOAuthConfig etOAuthConfig)
         {
             _config = etOAuthConfig;
+        }
+
+        public EtApiService(IOptions<EtApiServiceOptions> options)
+        {
+            _config = new EtOAuthConfig
+            {
+                BaseUrl = options.Value.BaseUrl,
+                AuthorizeUrl = options.Value.AuthorizeUrl,
+                ConsumerKey = options.Value.ConsumerKey,
+                OauthToken = options.Value.OauthToken,
+                ConsumerSecret = options.Value.ConsumerSecret,
+                OauthTokenSecret = options.Value.OauthTokenSecret,
+                AccessSecret = options.Value.AccessSecret,
+                AccessToken = options.Value.AccessToken,
+                TokenUrl = options.Value.TokenUrl,
+
+            };
         }
 
         public string GetAuthorizeUrl()
