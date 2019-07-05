@@ -25,12 +25,14 @@ namespace ETradeApiV1.Client.Services
             }
         }
 
-        public static IServiceCollection AddEtradeService(this IServiceCollection collection, IGetConfiguration getConfiguration)
+        public static IServiceCollection AddEtradeService(this IServiceCollection collection, Action<EtApiServiceOptions> setupAction)
         {
-            if (getConfiguration == null) throw new ArgumentNullException(nameof(getConfiguration));
+            if (collection == null) throw new ArgumentNullException(nameof(collection));
+            if (setupAction == null) throw new ArgumentNullException(nameof(setupAction));
 
-            var configuration = getConfiguration.GetConfiguration();
-            return collection.AddScoped<IEtApiService>(s => new EtApiService(configuration));
+            collection.Configure(setupAction);
+
+            return collection.AddScoped<IEtApiService, EtApiService>();
         }
     }
 }

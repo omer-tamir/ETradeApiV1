@@ -1,4 +1,6 @@
-﻿namespace ETradeApiV1.Client.Services
+﻿using ETradeApiV1.Client.Models;
+
+namespace ETradeApiV1.Client.Services
 {
     public class EtApiServiceOptions
     {
@@ -12,12 +14,10 @@
         public string AccessSecret { get; set; }
         public string TokenUrl { get; set; }
 
-        public delegate void GetConfiguration();
+        private EtOAuthConfig EtOAuthConfig { get; set; }
 
-        public EtApiServiceOptions GetFromSql()
-        {
-            return new EtApiServiceOptions();
-        }
+        public delegate void GetConfiguration();
+        
     }
 
     
