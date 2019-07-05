@@ -12,7 +12,7 @@
     <dependencies>
       <group targetFramework=".NETStandard2.0">
         <dependency id="Microsoft.Extensions.Options.ConfigurationExtensions" version="2.2.0" />
-        <dependency id="RestSharp" version="106.6.9" />
+        <dependency id="RestSharp" version="106.6.10" />
         <dependency id="System.Configuration.ConfigurationManager" version="4.5.0" />
       </group>
     </dependencies>
