@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using ETradeApiV1.Client.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,12 +23,9 @@ namespace ETradeApiV1.Client.Services
             }
         }
 
-        public static IServiceCollection AddEtradeService(this IServiceCollection collection, Action<EtApiServiceOptions> setupAction)
+        public static IServiceCollection AddEtradeService(this IServiceCollection collection)
         {
             if (collection == null) throw new ArgumentNullException(nameof(collection));
-            if (setupAction == null) throw new ArgumentNullException(nameof(setupAction));
-
-            collection.Configure(setupAction);
 
             return collection.AddScoped<IEtApiService, EtApiService>();
         }

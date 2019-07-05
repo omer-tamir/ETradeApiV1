@@ -13,28 +13,16 @@ namespace ETradeApiV1.Client.Services
     {
         private readonly EtOAuthConfig _config;
 
+        public EtApiService(ISettingConfiguration settingConfiguration)
+        {
+            if (settingConfiguration == null) throw new ArgumentNullException(nameof(settingConfiguration));
+            _config = settingConfiguration.GetEtradeOAuthConfig();
+        }
         public EtApiService(EtOAuthConfig etOAuthConfig)
         {
             _config = etOAuthConfig;
         }
-
-        public EtApiService(IOptions<EtApiServiceOptions> options)
-        {
-            _config = new EtOAuthConfig
-            {
-                BaseUrl = options.Value.BaseUrl,
-                AuthorizeUrl = options.Value.AuthorizeUrl,
-                ConsumerKey = options.Value.ConsumerKey,
-                OauthToken = options.Value.OauthToken,
-                ConsumerSecret = options.Value.ConsumerSecret,
-                OauthTokenSecret = options.Value.OauthTokenSecret,
-                AccessSecret = options.Value.AccessSecret,
-                AccessToken = options.Value.AccessToken,
-                TokenUrl = options.Value.TokenUrl,
-
-            };
-        }
-
+        
         public string GetAuthorizeUrl()
         {
             var baseUrl = new Uri(_config.TokenUrl);
