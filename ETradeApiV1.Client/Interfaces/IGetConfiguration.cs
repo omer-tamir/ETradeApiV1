@@ -1,4 +1,5 @@
-﻿using ETradeApiV1.Client.Models;
+﻿using System.Threading.Tasks;
+using ETradeApiV1.Client.Models;
 
 namespace ETradeApiV1.Client.Interfaces
 {
