@@ -1,0 +1,20 @@
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>ETrade-V1Api</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Omer Tamir</authors>
+    <owners>Omer Tamir</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Simple REST client to connect to E*Treade V1 new API</description>
+    <copyright>Copyright 2019</copyright>
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Microsoft.Extensions.Options.ConfigurationExtensions" version="2.2.0" />
+        <dependency id="RestSharp" version="106.6.9" />
+        <dependency id="System.Configuration.ConfigurationManager" version="4.5.0" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>
