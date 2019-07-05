@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ETradeApiV1.Client.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ETradeApiV1.Client.Services
@@ -16,12 +17,20 @@ namespace ETradeApiV1.Client.Services
             switch (contextLifetime)
             {
                 case ServiceLifetime.Singleton:
-                    return collection.AddSingleton<EtApiService, EtApiService>();
+                    return collection.AddSingleton<IEtApiService, EtApiService>();
                 case ServiceLifetime.Transient:
-                    return collection.AddTransient<EtApiService, EtApiService>();
+                    return collection.AddTransient<IEtApiService, EtApiService>();
                 default:
-                    return collection.AddScoped<EtApiService, EtApiService>();
+                    return collection.AddScoped<IEtApiService, EtApiService>();
             }
+        }
+
+        public static IServiceCollection AddEtradeService(this IServiceCollection collection, IGetConfiguration getConfiguration)
+        {
+            if (getConfiguration == null) throw new ArgumentNullException(nameof(getConfiguration));
+
+            var configuration = getConfiguration.GetConfiguration();
+            return collection.AddScoped<IEtApiService>(s => new EtApiService(configuration));
         }
     }
 }

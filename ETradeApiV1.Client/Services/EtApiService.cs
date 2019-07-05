@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web;
 using ETradeApiV1.Client.Dtos;
+using ETradeApiV1.Client.Interfaces;
 using ETradeApiV1.Client.Models;
 using Microsoft.Extensions.Options;
 using RestSharp;
@@ -8,9 +9,10 @@ using RestSharp.Authenticators;
 
 namespace ETradeApiV1.Client.Services
 {
-    public class EtApiService
+    public class EtApiService : IEtApiService
     {
         private readonly EtOAuthConfig _config;
+
         public EtApiService(EtOAuthConfig etOAuthConfig)
         {
             _config = etOAuthConfig;

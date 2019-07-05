@@ -11,5 +11,14 @@
         public string AccessToken { get; set; }
         public string AccessSecret { get; set; }
         public string TokenUrl { get; set; }
+
+        public delegate void GetConfiguration();
+
+        public EtApiServiceOptions GetFromSql()
+        {
+            return new EtApiServiceOptions();
+        }
     }
+
+    
 }
