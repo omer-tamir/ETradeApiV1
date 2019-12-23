@@ -150,5 +150,25 @@ namespace ETradeApiV1.Client.Services
 
             return response.Content == "Access Token has been renewed";
         }
+        public IRestResponse<AccountsListDto> ListAccounts()
+        {
+            var response = ListAccounts(_config);
+            if (!response.IsSuccessful)
+            {
+                RenewAccessToken();
+            }
+            return ListAccounts(_config);
+        }
+
+        public static IRestResponse<AccountsListDto> ListAccounts(EtOAuthConfig config)
+        {
+            var qClient = new RestClient
+            {
+                BaseUrl = new Uri(config.BaseUrl),
+                Authenticator = OAuth1Authenticator.ForProtectedResource(config.ConsumerKey, config.ConsumerSecret, config.AccessToken, config.AccessSecret)
+            };
+            var accountsListRequest = new RestRequest("accounts/list");
+            return qClient.Execute<AccountsListDto>(accountsListRequest);
+        }
     }
 }
